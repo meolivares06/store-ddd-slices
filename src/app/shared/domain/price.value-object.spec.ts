@@ -6,7 +6,7 @@ describe('Price Value Object', () => {
       const price = Price.create(10);
 
       expect(price.amount).toBe(10);
-      expect(price.currency).toBe('USD');
+      expect(price.currency).toBe('BRL');
     });
 
     it('should create a Price with a custom currency', () => {
@@ -30,6 +30,25 @@ describe('Price Value Object', () => {
       const price = Price.create(15.99, 'USD');
 
       expect(price.formatted).toBe('15.99 USD');
+    });
+  });
+
+  describe('format', () => {
+    it('should format currency for default pt-BR locale', () => {
+      const price = Price.create(15.99, 'BRL');
+      
+      const result = price.format();
+      
+      // Expected string typically formatted with R$ for BRL in pt-BR
+      expect(result).toMatch(/R\$\s*15,99/);
+    });
+
+    it('should format currency for en-US locale', () => {
+      const price = Price.create(15.99, 'USD');
+      
+      const result = price.format('en-US');
+      
+      expect(result).toMatch(/\$\s*15\.99/);
     });
   });
 

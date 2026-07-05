@@ -7,7 +7,7 @@ export class Price {
     this.currency = currency;
   }
 
-  static create(amount: number, currency = 'USD'): Price {
+  static create(amount: number, currency = 'BRL'): Price {
     if (amount < 0) throw new Error('Price amount cannot be negative');
     if (!currency || currency.trim() === '') throw new Error('Currency is required');
     return new Price(amount, currency);
@@ -15,6 +15,13 @@ export class Price {
 
   get formatted(): string {
     return `${this.amount} ${this.currency}`;
+  }
+
+  format(locale: string = 'pt-BR'): string {
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: this.currency,
+    }).format(this.amount);
   }
 
   add(other: Price): Price {
