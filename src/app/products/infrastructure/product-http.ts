@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { Product } from '../domain/product.model';
 import { Price } from '../domain/price.value-object';
+import { ProductRepository } from '../application/product-repository.interface';
 import { ApiProduct, ApiProductResponse } from './product-api.dto';
 
 /**
@@ -17,7 +18,7 @@ const mapToProduct = (api: ApiProduct): Product =>
   });
 
 @Service()
-export class ProductHttp {
+export class ProductHttp implements ProductRepository {
   readonly #http = inject(HttpClient);
 
   readonly baseUrl = 'https://dummyjson.com/products';
