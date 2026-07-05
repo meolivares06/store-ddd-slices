@@ -1,10 +1,3 @@
-export interface Root {
-  products: Product[]
-  total: number
-  skip: number
-  limit: number
-}
-
 export interface Product {
   id: number
   title: string
@@ -51,7 +44,7 @@ export interface Meta {
   qrCode: string
 }
 
-export interface ProductResponse {
+export interface ProductApiResponse {
   products: Product[]
   total: number
   skip: number
