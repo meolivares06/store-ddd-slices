@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CartPage } from './cart';
 import { CartService } from '../../cart.service';
 import { signal, computed } from '@angular/core';
-import { Price } from '../../../../products/domain/price.value-object';
+import { Price } from '../../../../shared/domain/price.value-object';
 import { CartItem } from '../../../domain/cart.model';
 import { provideRouter } from '@angular/router';
 

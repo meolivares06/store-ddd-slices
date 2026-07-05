@@ -1,6 +1,6 @@
 import { inject, Service, signal, computed } from '@angular/core';
 import { CART_REPOSITORY_TOKEN } from './cart-repository.interface';
-import { Price } from '../../products/domain/price.value-object';
+import { Price } from '../../shared/domain/price.value-object';
 import { Cart } from '../domain/cart.model';
 
 @Service()

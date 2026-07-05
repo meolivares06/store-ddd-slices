@@ -1,4 +1,4 @@
-import { Price } from '../../products/domain/price.value-object';
+import { Price } from '../../shared/domain/price.value-object';
 
 export interface CartItem {
   productId: string;

@@ -1,5 +1,5 @@
 import { Cart } from './cart.model';
-import { Price } from '../../products/domain/price.value-object';
+import { Price } from '../../shared/domain/price.value-object';
 
 describe('Cart Aggregate Root', () => {
   const validId = 'cart-1';

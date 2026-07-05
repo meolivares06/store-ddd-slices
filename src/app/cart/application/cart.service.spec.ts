@@ -3,7 +3,7 @@ import { vi } from 'vitest';
 import { CartService } from './cart.service';
 import { CART_REPOSITORY_TOKEN, CartRepository } from './cart-repository.interface';
 import { Cart } from '../domain/cart.model';
-import { Price } from '../../products/domain/price.value-object';
+import { Price } from '../../shared/domain/price.value-object';
 
 describe('CartService', () => {
   let service: CartService;

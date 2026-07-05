@@ -2,7 +2,7 @@ import { Service, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { CartRepository } from '../application/cart-repository.interface';
 import { Cart } from '../domain/cart.model';
-import { Price } from '../../products/domain/price.value-object';
+import { Price } from '../../shared/domain/price.value-object';
 
 interface CartStore {
   id: string;
