@@ -22,6 +22,8 @@ export class CartService {
 
     if (!currentCart) {
       currentCart = Cart.create(crypto.randomUUID(), 'anonymous_user');
+    } else {
+      currentCart = currentCart.clone();
     }
 
     try {
@@ -37,14 +39,15 @@ export class CartService {
     const currentCart = this.#cart();
     if (!currentCart) return;
 
-    currentCart.removeItem(productId);
-    this.#repository.save(currentCart);
+    const clonedCart = currentCart.clone();
+    clonedCart.removeItem(productId);
+    this.#repository.save(clonedCart);
 
-    if (currentCart.itemCount === 0) {
+    if (clonedCart.itemCount === 0) {
       this.#repository.clear();
     }
 
-    this.#cart.set(currentCart);
+    this.#cart.set(clonedCart);
   }
 
   clearCart(): void {

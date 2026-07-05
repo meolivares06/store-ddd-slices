@@ -124,4 +124,40 @@ describe('Cart Aggregate Root', () => {
       expect(cart.itemCount).toBe(5);
     });
   });
+
+  describe('clone', () => {
+    it('should return a new instance with the same id and customerId', () => {
+      const original = Cart.create(validId, customerId);
+      const cloned = original.clone();
+
+      expect(cloned).not.toBe(original);
+      expect(cloned.id).toBe(original.id);
+      expect(cloned.customerId).toBe(original.customerId);
+    });
+
+    it('should contain the same items as the original', () => {
+      const original = Cart.create(validId, customerId);
+      original.addItem('book-1', bookPrice, 2);
+      original.addItem('shirt-1', shirtPrice, 1);
+
+      const cloned = original.clone();
+
+      expect(cloned.items.length).toBe(2);
+      expect(cloned.items[0].productId).toBe('book-1');
+      expect(cloned.items[0].quantity).toBe(2);
+      expect(cloned.items[1].productId).toBe('shirt-1');
+      expect(cloned.items[1].quantity).toBe(1);
+    });
+
+    it('should be independent — mutating the clone does not affect the original', () => {
+      const original = Cart.create(validId, customerId);
+      original.addItem('book-1', bookPrice, 2);
+
+      const cloned = original.clone();
+      cloned.addItem('shirt-1', shirtPrice, 1);
+
+      expect(original.items.length).toBe(1);
+      expect(cloned.items.length).toBe(2);
+    });
+  });
 });

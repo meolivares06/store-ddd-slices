@@ -12,6 +12,9 @@ import { Product } from '../../../domain/product.model';
     </div>
   `,
   styleUrl: './product.css',
+  host: {
+    class: 'product-card border',
+  },
 })
 export class ProductComponent {
   product = input.required<Product>();

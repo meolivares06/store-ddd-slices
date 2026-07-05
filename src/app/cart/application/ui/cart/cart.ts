@@ -7,6 +7,9 @@ import { CartService } from '../../cart.service';
   imports: [RouterLink],
   templateUrl: './cart.html',
   styleUrl: './cart.css',
+  host: {
+    class: 'cart-page border',
+  },
 })
 export class CartPage {
   readonly #cartService = inject(CartService);

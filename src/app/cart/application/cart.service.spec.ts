@@ -86,6 +86,30 @@ describe('CartService', () => {
     });
   });
 
+  describe('addToCart (reactivity)', () => {
+    it('should create a new Cart reference when adding a new product to an existing cart', () => {
+      service.addToCart('book-1', Price.create(10, 'USD'), 2);
+      const firstCart = service.cart();
+
+      service.addToCart('shirt-1', Price.create(25, 'USD'), 1);
+      const secondCart = service.cart();
+
+      expect(secondCart).not.toBe(firstCart);
+      expect(service.itemCount()).toBe(3);
+    });
+
+    it('should create a new Cart reference when incrementing quantity of an existing product', () => {
+      service.addToCart('book-1', Price.create(10, 'USD'), 2);
+      const cartAfterFirstAdd = service.cart();
+
+      service.addToCart('book-1', Price.create(10, 'USD'), 3);
+      const cartAfterSecondAdd = service.cart();
+
+      expect(cartAfterSecondAdd).not.toBe(cartAfterFirstAdd);
+      expect(service.itemCount()).toBe(5);
+    });
+  });
+
   describe('removeFromCart', () => {
     it('should remove an item from the cart', () => {
       service.addToCart('book-1', Price.create(10, 'USD'), 2);
@@ -103,6 +127,31 @@ describe('CartService', () => {
       service.removeFromCart('book-1');
 
       expect(mockRepo.clear).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('removeFromCart (reactivity)', () => {
+    it('should create a new Cart reference when removing an item', () => {
+      service.addToCart('book-1', Price.create(10, 'USD'), 2);
+      service.addToCart('shirt-1', Price.create(25, 'USD'), 1);
+      const cartBeforeRemove = service.cart();
+
+      service.removeFromCart('book-1');
+      const cartAfterRemove = service.cart();
+
+      expect(cartAfterRemove).not.toBe(cartBeforeRemove);
+      expect(service.itemCount()).toBe(1);
+    });
+
+    it('should create a new Cart reference even when removing a non-existent product', () => {
+      service.addToCart('book-1', Price.create(10, 'USD'), 2);
+      const cartBeforeRemove = service.cart();
+
+      service.removeFromCart('nonexistent');
+      const cartAfterRemove = service.cart();
+
+      expect(cartAfterRemove).not.toBe(cartBeforeRemove);
+      expect(service.itemCount()).toBe(2);
     });
   });
 

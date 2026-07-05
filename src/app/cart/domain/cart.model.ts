@@ -54,4 +54,10 @@ export class Cart {
   get itemCount(): number {
     return this._items.reduce((acc, item) => acc + item.quantity, 0);
   }
+
+  clone(): Cart {
+    const cloned = new Cart(this.id, this.customerId);
+    cloned._items = this._items.map(item => ({ ...item }));
+    return cloned;
+  }
 }

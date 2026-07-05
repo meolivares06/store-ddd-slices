@@ -6,7 +6,7 @@
 } @else {
     <div class="cart-items">
         @for (item of items(); track item.productId) {
-            <div class="cart-item">
+            <div class="cart-item border">
                 <span class="item-id">{{ item.productId }}</span>
                 <span class="item-price">{{ item.unitPrice.formatted }}</span>
                 <span class="item-qty">Qty: {{ item.quantity }}</span>

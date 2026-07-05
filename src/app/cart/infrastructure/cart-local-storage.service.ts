@@ -10,20 +10,14 @@ interface CartStore {
   items: { productId: string; quantity: number; amount: number; currency: string }[];
 }
 
-// TODO(Senior): SSR fix — localStorage no existe en Node.js durante el prerender.
-//  Al inyectar PLATFORM_ID + isPlatformBrowser() en load() se resuelve:
-//
-//    #platformId = inject(PLATFORM_ID);
-//    if (!isPlatformBrowser(this.#platformId)) return null;
-//
-//  Esto permite que las rutas que dependen de CartService se prerendericen sin error.
-//  Referencia: openspec/changes/connect-cart-ui/verify-report.md → SSR prerender regression
-
 @Service()
 export class CartLocalStorageService implements CartRepository {
+  readonly #platformId = inject(PLATFORM_ID);
   private readonly KEY = 'shopping_cart_data';
 
   save(cart: Cart): void {
+    if (!isPlatformBrowser(this.#platformId)) return;
+
     const plainData: CartStore = {
       id: cart.id,
       customerId: cart.customerId,
@@ -38,6 +32,8 @@ export class CartLocalStorageService implements CartRepository {
   }
 
   load(): Cart | null {
+    if (!isPlatformBrowser(this.#platformId)) return null;
+
     const data = localStorage.getItem(this.KEY);
     if (!data) return null;
 
@@ -56,6 +52,8 @@ export class CartLocalStorageService implements CartRepository {
   }
 
   clear(): void {
+    if (!isPlatformBrowser(this.#platformId)) return;
+
     localStorage.removeItem(this.KEY);
   }
 }

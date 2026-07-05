@@ -9,6 +9,9 @@ import { Product } from '../../../domain/product.model';
   imports: [ProductComponent],
   templateUrl: './product-list.html',
   styleUrl: './product-list.css',
+  host: {
+    class: 'product-list border',
+  }
 })
 export class ProductList implements OnInit {
   protected productService = inject(ProductStore);
