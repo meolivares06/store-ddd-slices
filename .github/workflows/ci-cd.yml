@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-and-test:
-    name: Build and Test
+    name: Build and Test (CI)
     runs-on: ubuntu-latest
 
     steps:
@@ -42,22 +42,42 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run Tests
-        # Ejecuta los tests en modo CI (sin watch y usando ChromeHeadless)
         run: pnpm test -- --watch=false --browsers=ChromeHeadless
 
       - name: Build Application
         run: pnpm run build
 
-      # Aquí es donde entraría el paso de AWS para el CD (Continuous Deployment)
-      # - name: Configure AWS Credentials
-      #   uses: aws-actions/configure-aws-credentials@v4
-      #   with:
-      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     aws-region: us-east-1
-      #
-      # - name: Deploy to AWS S3
-      #   run: aws s3 sync dist/store-ddd-slices/browser/ s3://tu-bucket-portfolio --delete
-      #
-      # - name: Invalidate CloudFront Cache
-      #   run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_ID }} --paths "/*"
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: angular-build
+          path: dist/store-ddd-slices/browser/
+          retention-days: 1
+
+  deploy-production:
+    name: Deploy to AWS (CD)
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    # Solo ejecuta el CD si estamos haciendo push a la rama main (no en Pull Requests)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment: production
+
+    steps:
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: angular-build
+          path: dist/browser
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Deploy to AWS S3
+        run: aws s3 sync dist/browser/ s3://${{ secrets.AWS_S3_BUCKET }} --delete
+
+      - name: Invalidate CloudFront Cache
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_CLOUDFRONT_ID }} --paths "/*"
