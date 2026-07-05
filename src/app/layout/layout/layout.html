@@ -1,3 +1,14 @@
 <h1>DDD Online Store</h1>
+
+<nav>
+    <a routerLink="/products">Products</a>
+    <a routerLink="/cart">
+        Cart
+        @if (itemCount() > 0) {
+            <span data-testid="cart-badge">({{ itemCount() }})</span>
+        }
+    </a>
+</nav>
+
 <ng-content></ng-content>
 <p>Enjoy your shopping!</p>

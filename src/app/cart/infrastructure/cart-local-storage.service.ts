@@ -1,4 +1,5 @@
-import { Service } from '@angular/core';
+import { Service, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { CartRepository } from '../application/cart-repository.interface';
 import { Cart } from '../domain/cart.model';
 import { Price } from '../../products/domain/price.value-object';
@@ -8,6 +9,15 @@ interface CartStore {
   customerId: string;
   items: { productId: string; quantity: number; amount: number; currency: string }[];
 }
+
+// TODO(Senior): SSR fix — localStorage no existe en Node.js durante el prerender.
+//  Al inyectar PLATFORM_ID + isPlatformBrowser() en load() se resuelve:
+//
+//    #platformId = inject(PLATFORM_ID);
+//    if (!isPlatformBrowser(this.#platformId)) return null;
+//
+//  Esto permite que las rutas que dependen de CartService se prerendericen sin error.
+//  Referencia: openspec/changes/connect-cart-ui/verify-report.md → SSR prerender regression
 
 @Service()
 export class CartLocalStorageService implements CartRepository {

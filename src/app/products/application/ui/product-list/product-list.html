@@ -2,6 +2,6 @@
    
 <div class="list">
     @for (item of productService.products(); track item.id) {
-        <app-product [product]="item" />
+        <app-product [product]="item" (addToCart)="handleAddToCart($event)" />
     }
 </div>
