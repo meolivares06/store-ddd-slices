@@ -1,0 +1,7 @@
+<button (click)="applyDiscount()">Aplicar 10% Descuento</button>
+   
+<div class="list">
+    @for (item of productService.products(); track item.id) {
+        <app-product [product]="item" />
+    }
+</div>
