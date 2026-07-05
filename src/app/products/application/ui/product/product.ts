@@ -8,5 +8,5 @@ import { Product } from '../../../domain/product.model';
   styleUrl: './product.css',
 })
 export class ProductComponent {
-  product = input.required<Product>(); 
+  product = input.required<Product>();
 }
