@@ -2,7 +2,7 @@ import { inject, Service } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { Product } from '../domain/product.model';
-import { Price } from '../domain/price.value-object';
+import { Price } from '../../shared/domain/price.value-object';
 import { ProductRepository } from '../application/product-repository.interface';
 import { ApiProduct, ApiProductResponse } from './product-api.dto';
 

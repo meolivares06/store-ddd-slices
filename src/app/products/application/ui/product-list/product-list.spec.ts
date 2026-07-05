@@ -5,7 +5,7 @@ import { ProductHttp } from '../../../infrastructure/product-http';
 import { PRODUCT_REPOSITORY_TOKEN } from '../../../application/product-repository.interface';
 import { CartService } from '../../../../cart/application/cart.service';
 import { Product } from '../../../domain/product.model';
-import { Price } from '../../../domain/price.value-object';
+import { Price } from '../../../../shared/domain/price.value-object';
 
 describe('ProductList', () => {
   let component: ProductList;

@@ -4,7 +4,7 @@ import { vi } from 'vitest';
 import { ProductStore } from './product-store';
 import { PRODUCT_REPOSITORY_TOKEN, ProductRepository } from './product-repository.interface';
 import { Product } from '../domain/product.model';
-import { Price } from '../domain/price.value-object';
+import { Price } from '../../shared/domain/price.value-object';
 
 describe('ProductStore', () => {
   let store: ProductStore;
@@ -76,6 +76,22 @@ describe('ProductStore', () => {
       store.applyDiscountToAll(10);
 
       expect(original.price.amount).toBe(100);
+    });
+  });
+
+  describe('productsView', () => {
+    it('should expose products with formatted prices for the UI', () => {
+      const items = [makeProduct('1', 100), makeProduct('2', 200)];
+      mockRepo.getAll = vi.fn().mockReturnValue(of(items));
+      store.loadProducts();
+
+      const view = store.productsView();
+
+      expect(view.length).toBe(2);
+      expect(view[0].id).toBe('1');
+      expect(view[0].name).toBe('Product 1');
+      expect(view[0].formattedPrice).toMatch(/\$\s*100\.00/);
+      expect(view[1].formattedPrice).toMatch(/\$\s*200\.00/);
     });
   });
 });

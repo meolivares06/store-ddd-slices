@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ProductComponent } from './product';
 import { Product } from '../../../domain/product.model';
-import { Price } from '../../../domain/price.value-object';
+import { Price } from '../../../../shared/domain/price.value-object';
 
 describe('ProductComponent', () => {
   let component: ProductComponent;
@@ -36,7 +36,8 @@ describe('ProductComponent', () => {
 
     const el: HTMLElement = fixture.nativeElement;
     expect(el.textContent).toContain('Test Product');
-    expect(el.textContent).toContain('10 USD');
+    expect(el.textContent).toContain('US$');
+    expect(el.textContent).toContain('10,00');
   });
 
   describe('addToCart output', () => {

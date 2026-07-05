@@ -1,4 +1,4 @@
-import { Price } from './price.value-object';
+import { Price } from '../../shared/domain/price.value-object';
 
 export interface ProductProps {
   id: string;
@@ -29,6 +29,13 @@ export class Product {
       id: this.id,
       name: this.name,
       price: this.price.applyDiscount(percentage),
+    });
+  }
+
+  updatePrice(newPrice: Price): Product {
+    return Product.create({
+      ...this,
+      price: newPrice,
     });
   }
 }

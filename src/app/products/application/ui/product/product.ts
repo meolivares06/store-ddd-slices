@@ -7,7 +7,7 @@ import { Product } from '../../../domain/product.model';
   template: `
     <div class="product-card">
       <h3>{{ product().name }}</h3>
-      <p>Price: {{ product().price.formatted }}</p>
+      <p>Price: {{ product().price.format() }}</p>
       <button (click)="addToCart.emit(product())">Agregar al carrito</button>
     </div>
   `,

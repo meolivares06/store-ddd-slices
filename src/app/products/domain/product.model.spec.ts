@@ -1,5 +1,5 @@
 import { Product } from './product.model';
-import { Price } from './price.value-object';
+import { Price } from '../../shared/domain/price.value-object';
 
 describe('Product Domain Entity', () => {
   const validProps = { id: '1', name: 'Test Product', price: Price.create(100) };
@@ -52,6 +52,20 @@ describe('Product Domain Entity', () => {
       product.applyDiscount(30);
 
       expect(product).toEqual(Product.create(validProps));
+    });
+  });
+
+  describe('updatePrice', () => {
+    it('should return a new Product with the updated price', () => {
+      const product = Product.create(validProps);
+      const newPrice = Price.create(150, 'USD');
+
+      const updated = product.updatePrice(newPrice);
+
+      expect(updated.price.amount).toBe(150);
+      expect(updated.price.currency).toBe('USD');
+      expect(updated.id).toBe(product.id);
+      expect(updated.name).toBe(product.name);
     });
   });
 });
