@@ -27,9 +27,9 @@ describe('Price Value Object', () => {
 
   describe('formatted', () => {
     it('should return formatted string with amount and currency', () => {
-      const price = Price.create(15.99, 'USD');
+      const price = Price.create(15.99, 'BRL');
 
-      expect(price.formatted).toBe('15.99 USD');
+      expect(price.formatted).toBe('15.99 BRL');
     });
   });
 
@@ -44,7 +44,7 @@ describe('Price Value Object', () => {
     });
 
     it('should format currency for en-US locale', () => {
-      const price = Price.create(15.99, 'USD');
+      const price = Price.create(15.99, 'BRL');
       
       const result = price.format('en-US');
       
@@ -54,25 +54,25 @@ describe('Price Value Object', () => {
 
   describe('add', () => {
     it('should add two prices with the same currency', () => {
-      const a = Price.create(10, 'USD');
-      const b = Price.create(20, 'USD');
+      const a = Price.create(10, 'BRL');
+      const b = Price.create(20, 'BRL');
 
       const result = a.add(b);
 
       expect(result.amount).toBe(30);
-      expect(result.currency).toBe('USD');
+      expect(result.currency).toBe('BRL');
     });
 
     it('should throw when adding prices with different currencies', () => {
-      const a = Price.create(10, 'USD');
+      const a = Price.create(10, 'BRL');
       const b = Price.create(20, 'EUR');
 
       expect(() => a.add(b)).toThrow('Cannot add prices with different currencies');
     });
 
     it('should not mutate the original prices', () => {
-      const a = Price.create(10, 'USD');
-      const b = Price.create(20, 'USD');
+      const a = Price.create(10, 'BRL');
+      const b = Price.create(20, 'BRL');
 
       a.add(b);
 
@@ -83,7 +83,7 @@ describe('Price Value Object', () => {
 
   describe('applyDiscount', () => {
     it('should apply a percentage discount', () => {
-      const price = Price.create(100, 'USD');
+      const price = Price.create(100, 'BRL');
 
       const discounted = price.applyDiscount(20);
 
@@ -103,7 +103,7 @@ describe('Price Value Object', () => {
     });
 
     it('should not mutate the original price', () => {
-      const price = Price.create(100, 'USD');
+      const price = Price.create(100, 'BRL');
 
       price.applyDiscount(20);
 
