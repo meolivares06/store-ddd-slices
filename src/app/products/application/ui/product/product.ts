@@ -14,9 +14,9 @@ import { ButtonComponent } from '../../../../../shared/ui/button/button.componen
       <div class="card__content">
         <div class="card__header">
           <h4 class="card__title">{{ product().name }}</h4>
-          <span class="card__price"><span class="price-label">PRICE</span> {{ product().price.format() }}</span>
+          <span class="card__price"> {{ product().price.format() }}</span>
         </div>
-        <p class="card__description">Precision engineered utility for the contemporary user.</p>
+        <p class="card__description">{{ product().description }}</p>
         <div class="card__action">
           <app-button 
             [label]="'Agregar al carrito'" 

@@ -1,44 +1,24 @@
-@import './styles/_tokens.css';
+﻿@import './styles/_tokens.css';
 
-/* You can add global styles to this file, and also import other style files */
-html {
+/* Global Resets and Base Styles */
+html, body {
+    margin: 0;
+    padding: 0;
     line-height: 1.5;
     -webkit-text-size-adjust: 100%;
     -moz-tab-size: 4;
     tab-size: 4;
-    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    font-feature-settings: normal;
-    font-variation-settings: normal;
+    font-family: var(--font-family-sans);
+    background-color: var(--color-bg);
+    color: var(--color-fg);
     -webkit-tap-highlight-color: transparent;
 }
-.border {
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+
+*, *::before, *::after {
+    box-sizing: border-box;
 }
 
-.card {
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.card__title {
-    line-height: 1.25;
-    text-transform: uppercase;
-}
-.card__price {
-    font-size: 16px;
-    line-height: 1.5;
-    font-weight: 400;
-}
-.card__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.card__img {
-    width: 100%;
-    max-width: 300px;
-    height: auto;
+/* Base elements */
+button, input, optgroup, select, textarea {
+    font-family: inherit;
 }

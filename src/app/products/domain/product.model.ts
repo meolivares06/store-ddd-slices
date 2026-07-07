@@ -6,6 +6,7 @@ export interface ProductProps {
   price: Price;
   thumbnail: string;
   images: string[];
+  description: string;
 }
 
 export class Product {
@@ -14,6 +15,7 @@ export class Product {
   readonly price: Price;
   readonly thumbnail: string;
   readonly images: string[];
+  readonly description: string;
 
   private constructor(props: ProductProps) {
     this.id = props.id;
@@ -21,6 +23,7 @@ export class Product {
     this.price = props.price;
     this.thumbnail = props.thumbnail;
     this.images = props.images;
+    this.description = props.description;
   }
 
   static create(props: ProductProps): Product {
@@ -37,6 +40,7 @@ export class Product {
       price: this.price.applyDiscount(percentage),
       thumbnail: this.thumbnail,
       images: this.images,
+      description: this.description,
     });
   }
 

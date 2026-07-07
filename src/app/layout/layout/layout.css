@@ -35,12 +35,19 @@
 }
 
 .nav-link {
+  font-family: var(--font-family-mono); /* Changing to Mono for nav links */
+  font-weight: normal;
+  text-decoration: none;
+  color: #4c4546; /* text-on-surface-variant */
+  text-transform: uppercase;
+  transition: transform 0.1s ease;
+}
+
+.nav-link.active-link, .nav-link:first-child {
   font-family: var(--font-family-sans);
   font-weight: bold;
   text-decoration: underline;
   color: var(--color-fg);
-  text-transform: uppercase;
-  transition: transform 0.1s ease;
 }
 
 .nav-link:hover {

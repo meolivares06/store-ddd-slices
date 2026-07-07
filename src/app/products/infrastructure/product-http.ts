@@ -17,6 +17,7 @@ const mapToProduct = (api: ApiProduct): Product =>
     price: Price.create(api.price),
     thumbnail: api.thumbnail || 'https://via.placeholder.com/300',
     images: api.images || [],
+    description: api.description || '',
   });
 
 @Service()
