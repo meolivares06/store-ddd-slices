@@ -6,7 +6,7 @@ export interface ProductProps {
   price: Price;
   thumbnail: string;
   images: string[];
-  description: string;
+  description?: string;
 }
 
 export class Product {
@@ -23,7 +23,7 @@ export class Product {
     this.price = props.price;
     this.thumbnail = props.thumbnail;
     this.images = props.images;
-    this.description = props.description;
+    this.description = props.description || 'Precision engineered utility for the contemporary user.';
   }
 
   static create(props: ProductProps): Product {
