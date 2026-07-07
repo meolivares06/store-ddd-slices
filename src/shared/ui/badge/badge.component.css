@@ -1,0 +1,10 @@
+.badge {
+  font-family: var(--font-family-mono);
+  background-color: var(--color-fg);
+  color: var(--color-bg);
+  padding: calc(var(--spacing-sm) / 2) var(--spacing-sm);
+  border: var(--border-width-thin) var(--border-style) var(--color-fg);
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}

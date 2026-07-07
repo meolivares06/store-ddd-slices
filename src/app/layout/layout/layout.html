@@ -1,14 +1,24 @@
-<h1>DDD Online Store</h1>
-
-<nav class="border">
-    <a routerLink="/products">Products</a>
-    <a routerLink="/cart">
-        Cart
+<header class="app-header">
+  <div class="header-container">
+    <h1 class="header-title">DDD ONLINE STORE</h1>
+    <nav class="header-nav">
+      <a routerLink="/products" class="nav-link">SHOP</a>
+      <a routerLink="/cart" class="nav-link">
+        CART
         @if (itemCount() > 0) {
             <span data-testid="cart-badge">({{ itemCount() }})</span>
+        } @else {
+            <span>(0)</span>
         }
-    </a>
-</nav>
+      </a>
+    </nav>
+  </div>
+</header>
 
-<ng-content></ng-content>
-<p>Enjoy your shopping!</p>
+<main class="app-main">
+  <ng-content></ng-content>
+</main>
+
+<footer class="app-footer">
+  <p class="footer-text">Technical Brutalist Commerce Ecosystem. ©2026 DDD</p>
+</footer>

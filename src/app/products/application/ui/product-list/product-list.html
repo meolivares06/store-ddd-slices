@@ -1,7 +1,15 @@
-<button (click)="applyDiscount()">Aplicar 10% Descuento</button>
-   
-<div class="list">
-    @for (item of productService.products(); track item.id) {
-        <app-product [product]="item" (addToCart)="handleAddToCart($event)" />
-    }
+<div class="product-list-container">
+    <div class="list-header">
+        <app-button 
+            [label]="'Aplicar 10% Descuento'" 
+            [variant]="'secondary'" 
+            (clicked)="applyDiscount()">
+        </app-button>
+    </div>
+       
+    <div class="list">
+        @for (item of productService.products(); track item.id) {
+            <app-product [product]="item" (addToCart)="handleAddToCart($event)" />
+        }
+    </div>
 </div>

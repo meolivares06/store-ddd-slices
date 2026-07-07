@@ -1,0 +1,26 @@
+:root {
+  /* Colors - High Contrast / Monochrome with stark accents */
+  --color-bg: #ffffff;
+  --color-fg: #000000;
+  --color-accent: #0057FF; /* System Blue */
+  --color-surface: #f9f9f9;
+
+  /* Typography - Monospace and bold */
+  --font-family-sans: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-family-mono: "Space Mono", "Courier New", Courier, monospace;
+
+  /* Borders - Thick, sharp */
+  --border-width-thin: 1px;
+  --border-width-thick: 2px;
+  --border-style: solid;
+  --border-color: var(--color-fg);
+
+  /* Spacing - Rigid grid */
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 48px;
+
+  /* Shadows - Hard shadows (no blur) */
+  --shadow-hard: 4px 4px 0px var(--color-fg);
+}
