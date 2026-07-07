@@ -1,17 +1,20 @@
-<header class="app-header">
+﻿<header class="app-header">
   <div class="header-container">
-    <h1 class="header-title">DDD ONLINE STORE</h1>
-    <nav class="header-nav">
+    <div class="header-left">
+      <h1 class="header-title">DDD ONLINE STORE</h1>
+    </div>
+    
+    <nav class="header-center">
       <a routerLink="/products" class="nav-link">SHOP</a>
-      <a routerLink="/cart" class="nav-link">
-        CART
-        @if (itemCount() > 0) {
-            <span data-testid="cart-badge">({{ itemCount() }})</span>
-        } @else {
-            <span>(0)</span>
-        }
-      </a>
+      <a routerLink="/archive" class="nav-link">ARCHIVE</a>
+      <a routerLink="/info" class="nav-link">INFO</a>
     </nav>
+    
+    <div class="header-right">
+      <button class="cart-button" routerLink="/cart">
+        CART @if (itemCount() > 0) { ({{ itemCount() }}) } @else { (0) }
+      </button>
+    </div>
   </div>
 </header>
 

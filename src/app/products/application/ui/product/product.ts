@@ -1,28 +1,30 @@
-import { Component, input, output } from '@angular/core';
+﻿import { Component, input, output } from '@angular/core';
 import { Product } from '../../../domain/product.model';
 import { ButtonComponent } from '../../../../../shared/ui/button/button.component';
-import { BadgeComponent } from '../../../../../shared/ui/badge/badge.component';
 
 @Component({
   selector: 'app-product',
-  imports: [ButtonComponent, BadgeComponent],
+  imports: [ButtonComponent],
   template: `
     <div class="product-card">
-      <div class="card__image">
-        <img [src]="product().thumbnail" alt="{{ product().name }}" />
+      <div class="card__image-container">
+        <div class="card__image" [style.backgroundImage]="'url(' + product().thumbnail + ')'"></div>
+        <div class="card__badge">IN_STOCK</div>
       </div>
-      <div class="card__header">
-        <h4 class="card__title">{{ product().name }}</h4>
-        <div class="card__price-row">
-          <app-badge [text]="'Price'" />
-          <p class="card__price">{{ product().price.format() }}</p>
+      <div class="card__content">
+        <div class="card__header">
+          <h4 class="card__title">{{ product().name }}</h4>
+          <span class="card__price"><span class="price-label">PRICE</span> {{ product().price.format() }}</span>
+        </div>
+        <p class="card__description">Precision engineered utility for the contemporary user.</p>
+        <div class="card__action">
+          <app-button 
+            [label]="'Agregar al carrito'" 
+            [variant]="'primary'" 
+            (clicked)="addToCart.emit(product())" 
+          />
         </div>
       </div>
-      <app-button 
-        [label]="'Agregar al carrito'" 
-        [variant]="'primary'" 
-        (clicked)="addToCart.emit(product())" 
-      />
     </div>
   `,
   styleUrl: './product.css',

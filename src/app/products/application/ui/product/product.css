@@ -1,18 +1,23 @@
-.product-card {
+﻿.product-card {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-md);
   border: var(--border-width-thick) var(--border-style) var(--color-fg);
   background-color: var(--color-bg);
-  /* Brutalist style for the card itself */
-  box-shadow: 4px 4px 0px var(--color-fg);
+  height: 100%;
+}
+
+.card__image-container {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-bottom: var(--border-width-thick) var(--border-style) var(--color-fg);
+  overflow: hidden;
 }
 
 .card__image {
-  border: var(--border-width-thin) var(--border-style) var(--color-fg);
-  overflow: hidden;
-  /* Grayscale filter per brutalist design */
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
   filter: grayscale(100%);
   transition: transform 0.7s ease, filter 0.7s ease;
 }
@@ -22,36 +27,73 @@
   transform: scale(1.05);
 }
 
-.card__image img {
-  width: 100%;
-  height: auto;
-  display: block;
+.card__badge {
+  position: absolute;
+  top: var(--spacing-md);
+  left: var(--spacing-md);
+  background-color: var(--color-fg);
+  color: var(--color-bg);
+  padding: 4px 8px;
+  font-family: var(--font-family-mono);
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.card__content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding: var(--spacing-md);
 }
 
 .card__header {
   display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
+  justify-content: space-between;
+  align-items: flex-start;
   margin-bottom: var(--spacing-sm);
+  gap: var(--spacing-sm);
 }
 
 .card__title {
   font-family: var(--font-family-sans);
   font-weight: bold;
-  font-size: 1.25rem;
+  font-size: 1rem;
+  line-height: 1.2;
   margin: 0;
   text-transform: uppercase;
 }
 
-.card__price-row {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-}
-
 .card__price {
   font-family: var(--font-family-mono);
-  font-size: 1rem;
+  font-size: 0.85rem;
   font-weight: bold;
-  margin: 0;
+  white-space: nowrap;
+}
+
+.price-label {
+  background: var(--color-fg);
+  color: var(--color-bg);
+  padding: 2px 4px;
+  margin-right: 4px;
+  font-size: 0.7rem;
+}
+
+.card__description {
+  font-family: var(--font-family-sans);
+  font-size: 0.85rem;
+  color: #4c4546; /* on-surface-variant */
+  margin-top: 0;
+  margin-bottom: var(--spacing-lg);
+  flex-grow: 1;
+}
+
+.card__action {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+app-button {
+  width: 100%;
+  display: block;
 }

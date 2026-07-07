@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Layout } from './layout';
 import { CartService } from '../../cart/application/cart.service';
 import { signal } from '@angular/core';
@@ -49,7 +49,7 @@ describe('Layout', () => {
     it('should contain a link to /cart', () => {
       fixture.detectChanges();
       const el: HTMLElement = fixture.nativeElement;
-      const link = el.querySelector('a[routerLink="/cart"], a[href="/cart"]');
+      const link = el.querySelector('[routerLink="/cart"], [href="/cart"]');
       expect(link).toBeTruthy();
     });
   });
