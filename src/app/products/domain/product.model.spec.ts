@@ -2,7 +2,7 @@ import { Product } from './product.model';
 import { Price } from '../../shared/domain/price.value-object';
 
 describe('Product Domain Entity', () => {
-  const validProps = { id: '1', name: 'Test Product', price: Price.create(100) };
+  const validProps = { id: '1', name: 'Test Product', price: Price.create(100), thumbnail: 'thumb.jpg', images: ['img1.jpg'] };
 
   describe('creation', () => {
     it('should create a Product with valid props', () => {

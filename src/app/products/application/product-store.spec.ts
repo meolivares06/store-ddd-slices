@@ -11,12 +11,11 @@ describe('ProductStore', () => {
   let mockRepo: ProductRepository;
 
   const makeProduct = (id: string, price: number) =>
-    Product.create({ id, name: `Product ${id}`, price: Price.create(price, 'USD') });
+    Product.create({ id, name: `Product ${id}`, price: Price.create(price, 'USD'), thumbnail: 'thumb.jpg', images: ['img.jpg'] });
 
   beforeEach(() => {
     mockRepo = {
       getAll: vi.fn(),
-      create: vi.fn(),
     };
 
     TestBed.configureTestingModule({

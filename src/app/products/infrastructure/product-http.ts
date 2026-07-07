@@ -14,7 +14,9 @@ const mapToProduct = (api: ApiProduct): Product =>
   Product.create({
     id: String(api.id),
     name: api.title,
-    price: Price.create(api.price, 'USD'),
+    price: Price.create(api.price),
+    thumbnail: api.thumbnail || 'https://via.placeholder.com/300',
+    images: api.images || [],
   });
 
 @Service()
@@ -27,9 +29,5 @@ export class ProductHttp implements ProductRepository {
     return this.#http.get<ApiProductResponse>(this.baseUrl).pipe(
       map(response => response.products.map(mapToProduct)),
     );
-  }
-
-  create(product: Product): Observable<Product> {
-    return this.#http.post<Product>(this.baseUrl, product);
   }
 }

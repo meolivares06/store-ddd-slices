@@ -5,9 +5,14 @@ import { Product } from '../../../domain/product.model';
   selector: 'app-product',
   imports: [],
   template: `
-    <div class="product-card">
-      <h3>{{ product().name }}</h3>
-      <p>Price: {{ product().price.format() }}</p>
+    <div class="card">
+      <div class="card__image">
+        <img [src]="product().thumbnail" alt="{{ product().name }}" />
+      </div>
+      <div class="card__header">
+        <h4 class="card__title">{{ product().name }}</h4>
+        <p class="card__price">Price: {{ product().price.format() }}</p>
+      </div>
       <button (click)="addToCart.emit(product())">Agregar al carrito</button>
     </div>
   `,

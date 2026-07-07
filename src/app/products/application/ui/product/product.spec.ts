@@ -11,6 +11,8 @@ describe('ProductComponent', () => {
     id: '1',
     name: 'Test Product',
     price: Price.create(10, 'USD'),
+    thumbnail: 'thumb.jpg',
+    images: ['img.jpg'],
   });
 
   function configureComponent(product: Product) {
@@ -61,6 +63,8 @@ describe('ProductComponent', () => {
         id: '2',
         name: 'Another Product',
         price: Price.create(25, 'USD'),
+        thumbnail: 'thumb.jpg',
+        images: ['img.jpg'],
       });
       configureComponent(anotherProduct);
       fixture.detectChanges();

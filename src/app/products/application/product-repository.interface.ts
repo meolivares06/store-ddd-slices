@@ -4,7 +4,6 @@ import { Product } from '../domain/product.model';
 
 export interface ProductRepository {
   getAll(): Observable<Product[]>;
-  create(product: Product): Observable<Product>;
 }
 
 export const PRODUCT_REPOSITORY_TOKEN = new InjectionToken<ProductRepository>(

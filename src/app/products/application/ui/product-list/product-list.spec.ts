@@ -37,7 +37,7 @@ describe('ProductList', () => {
 
   describe('handleAddToCart', () => {
     it('should call cartService.addToCart with product id, price, and quantity 1', () => {
-      const product = Product.create({ id: '1', name: 'Test', price: Price.create(10, 'USD') });
+      const product = Product.create({ id: '1', name: 'Test', price: Price.create(10, 'USD'), thumbnail: 'thumb.jpg', images: ['img.jpg'] });
       (component as unknown as { handleAddToCart(product: Product): void }).handleAddToCart(product);
 
       expect(mockCartService.addToCart).toHaveBeenCalledOnce();
@@ -45,7 +45,7 @@ describe('ProductList', () => {
     });
 
     it('should call cartService.addToCart for different products', () => {
-      const product = Product.create({ id: '2', name: 'Another', price: Price.create(25, 'USD') });
+      const product = Product.create({ id: '2', name: 'Another', price: Price.create(25, 'USD'), thumbnail: 'thumb.jpg', images: ['img.jpg'] });
       (component as unknown as { handleAddToCart(product: Product): void }).handleAddToCart(product);
 
       expect(mockCartService.addToCart).toHaveBeenCalledWith('2', Price.create(25, 'USD'), 1);
