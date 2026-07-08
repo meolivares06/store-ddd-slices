@@ -28,6 +28,10 @@ export class ProductList implements OnInit {
 
   handleAddToCart(product: Product): void {
     console.log('Adding product to cart:', product);
-    this.#cartService.addToCart(product.id, product.price, 1);
+    this.#cartService.addToCart(product.id, product.price, 1, {
+      title: product.name,
+      imageUrl: product.thumbnail,
+      priceLabel: product.price.formatted,
+    });
   }
 }

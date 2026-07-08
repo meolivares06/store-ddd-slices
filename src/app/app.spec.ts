@@ -3,6 +3,7 @@ import { App } from './app';
 import { routes } from './app.routes';
 import { provideRouter } from '@angular/router';
 import { CART_REPOSITORY_TOKEN } from './cart/application/cart-repository.interface';
+import { CART_ITEM_SNAPSHOT_REPOSITORY_TOKEN } from './cart/application/cart-item-snapshot-repository.interface';
 
 describe('App', () => {
   beforeEach(async () => {
@@ -11,6 +12,10 @@ describe('App', () => {
       providers: [
         provideRouter([]),
         { provide: CART_REPOSITORY_TOKEN, useValue: { save: vi.fn(), load: vi.fn(() => null), clear: vi.fn() } },
+        {
+          provide: CART_ITEM_SNAPSHOT_REPOSITORY_TOKEN,
+          useValue: { save: vi.fn(), loadAll: vi.fn(() => ({})), remove: vi.fn(), clear: vi.fn() },
+        },
       ],
     }).compileComponents();
   });

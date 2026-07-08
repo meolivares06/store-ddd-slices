@@ -3,6 +3,13 @@ import { RouterLink } from '@angular/router';
 import { CartService } from '../../cart.service';
 import { CartItemComponent } from './components/cart-item/cart-item.component';
 import { CartSummaryComponent } from './components/cart-summary/cart-summary.component';
+import { CartItem } from '../../../domain/cart.model';
+
+export interface CartItemViewModel extends CartItem {
+  title: string;
+  imageUrl: string | null;
+  hasProductChanged: boolean;
+}
 
 @Component({
   selector: 'app-cart',
@@ -16,11 +23,21 @@ import { CartSummaryComponent } from './components/cart-summary/cart-summary.com
 export class CartPage {
   readonly #cartService = inject(CartService);
 
-  readonly items = computed(() => {
-    // TODO: Event/Snapshot Logic
-    // We need to map the pure domain CartItems (productId, quantity, unitPrice)
-    // into a ViewModel that joins data with Product (name, images, etc.)
-    return this.#cartService.cart()?.items ?? [];
+  readonly items = computed<CartItemViewModel[]>(() => {
+    const snapshots = this.#cartService.itemSnapshots();
+    return (this.#cartService.cart()?.items ?? []).map(item => {
+      const snapshot = snapshots[item.productId];
+      const fallbackTitle = `Product ${item.productId.substring(0, 4)}`;
+      const hasProductChanged =
+        snapshot?.priceLabel !== undefined && snapshot.priceLabel !== item.unitPrice.formatted;
+
+      return {
+        ...item,
+        title: snapshot?.title || fallbackTitle,
+        imageUrl: snapshot?.imageUrl || null,
+        hasProductChanged,
+      };
+    });
   });
   readonly total = this.#cartService.total;
   readonly itemCount = this.#cartService.itemCount;
@@ -30,15 +47,9 @@ export class CartPage {
   }
 
   updateQuantity(event: { productId: string; quantity: number }): void {
-    // The previous implementation used addItem to increase quantity. 
-    // Assuming we need to set exact quantity or adjust. Wait, CartService model addItem adds relative quantity.
-    // Let me check CartService.
     const item = this.items().find(i => i.productId === event.productId);
-    if (item) {
-      const diff = event.quantity - item.quantity;
-      if (diff !== 0) {
-        this.#cartService.addToCart(event.productId, item.unitPrice, diff);
-      }
+    if (item && event.quantity !== item.quantity) {
+      this.#cartService.setCartItemQuantity(event.productId, event.quantity);
     }
   }
 

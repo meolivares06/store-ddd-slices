@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
-import { CartItem } from '../../../../../domain/cart.model';
 import { QuantityStepperComponent } from '../../../../../../../shared/ui/quantity-stepper/quantity-stepper.component';
+import type { CartItemViewModel } from '../../cart';
 
 @Component({
   selector: 'app-cart-item',
@@ -12,7 +12,7 @@ import { QuantityStepperComponent } from '../../../../../../../shared/ui/quantit
   },
 })
 export class CartItemComponent {
-  item = input.required<CartItem>();
+  item = input.required<CartItemViewModel>();
   remove = output<string>();
   quantityChange = output<{ productId: string; quantity: number }>();
 

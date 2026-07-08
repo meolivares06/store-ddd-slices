@@ -38,6 +38,17 @@ export class Cart {
     }
   }
 
+  setItemQuantity(productId: string, quantity: number): void {
+    if (quantity < 1) throw new Error('Quantity must be at least one');
+
+    const existing = this._items.find(item => item.productId === productId);
+    if (!existing) {
+      throw new Error('Item not found in cart');
+    }
+
+    existing.quantity = quantity;
+  }
+
   removeItem(productId: string): void {
     this._items = this._items.filter(item => item.productId !== productId);
   }

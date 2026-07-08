@@ -10,7 +10,10 @@ describe('CartItemComponent', () => {
   const mockItem = {
     productId: 'prod-123',
     quantity: 2,
-    unitPrice: Price.create(1000, 'USD')
+    unitPrice: Price.create(1000, 'USD'),
+    title: 'Snapshot title',
+    imageUrl: 'https://cdn.example.com/prod-123.jpg',
+    hasProductChanged: false,
   };
 
   beforeEach(async () => {
@@ -46,5 +49,21 @@ describe('CartItemComponent', () => {
     stepper.quantityChange.emit(3);
 
     expect(emittedEvent).toEqual({ productId: 'prod-123', quantity: 3 });
+  });
+
+  it('should render snapshot title when available', () => {
+    const el: HTMLElement = fixture.nativeElement;
+    expect(el.textContent).toContain('Snapshot title');
+  });
+
+  it('should show changed flag when hasProductChanged is true', () => {
+    fixture.componentRef.setInput('item', {
+      ...mockItem,
+      hasProductChanged: true,
+    });
+    fixture.detectChanges();
+
+    const el: HTMLElement = fixture.nativeElement;
+    expect(el.textContent).toContain('Product data changed since added');
   });
 });

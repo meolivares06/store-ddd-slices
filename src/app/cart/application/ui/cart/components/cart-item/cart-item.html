@@ -1,11 +1,24 @@
 <div class="item-image-wrapper">
-  <div class="item-image-placeholder"></div>
+  @if (item().imageUrl) {
+    <img
+      class="item-image"
+      [src]="item().imageUrl!"
+      [alt]="item().title"
+      loading="lazy"
+      decoding="async"
+    />
+  } @else {
+    <div class="item-image-placeholder" aria-hidden="true"></div>
+  }
 </div>
 <div class="item-right-side">
   <div class="item-top-row">
     <div class="item-title-col">
-      <span class="item-title">Product {{ item().productId.substring(0,4) }}</span>
+      <span class="item-title">{{ item().title }}</span>
       <span class="item-sku">SKU: {{ item().productId }}</span>
+      @if (item().hasProductChanged) {
+        <span class="item-change-flag" role="status" aria-live="polite">Product data changed since added</span>
+      }
     </div>
     <span class="item-price">{{ item().unitPrice.formatted }}</span>
   </div>

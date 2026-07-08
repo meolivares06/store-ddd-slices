@@ -2,12 +2,17 @@ import { TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
 import { CartService } from './cart.service';
 import { CART_REPOSITORY_TOKEN, CartRepository } from './cart-repository.interface';
+import {
+  CART_ITEM_SNAPSHOT_REPOSITORY_TOKEN,
+  CartItemSnapshotRepository,
+} from './cart-item-snapshot-repository.interface';
 import { Cart } from '../domain/cart.model';
 import { Price } from '../../shared/domain/price.value-object';
 
 describe('CartService', () => {
   let service: CartService;
   let mockRepo: CartRepository;
+  let mockSnapshotRepo: CartItemSnapshotRepository;
 
   const makeCart = () => Cart.create('cart-1', 'user-1');
 
@@ -18,10 +23,18 @@ describe('CartService', () => {
       clear: vi.fn(),
     };
 
+    mockSnapshotRepo = {
+      save: vi.fn(),
+      loadAll: vi.fn().mockReturnValue({}),
+      remove: vi.fn(),
+      clear: vi.fn(),
+    };
+
     TestBed.configureTestingModule({
       providers: [
         CartService,
         { provide: CART_REPOSITORY_TOKEN, useValue: mockRepo },
+        { provide: CART_ITEM_SNAPSHOT_REPOSITORY_TOKEN, useValue: mockSnapshotRepo },
       ],
     });
 
@@ -31,6 +44,7 @@ describe('CartService', () => {
   describe('initial state', () => {
     it('should load cart from repository on creation', () => {
       expect(mockRepo.load).toHaveBeenCalledTimes(1);
+      expect(mockSnapshotRepo.loadAll).toHaveBeenCalledTimes(1);
     });
 
     it('should start with empty cart when no saved cart exists', () => {
@@ -50,6 +64,10 @@ describe('CartService', () => {
           {
             provide: CART_REPOSITORY_TOKEN,
             useValue: { save: vi.fn(), load: vi.fn().mockReturnValue(savedCart), clear: vi.fn() },
+          },
+          {
+            provide: CART_ITEM_SNAPSHOT_REPOSITORY_TOKEN,
+            useValue: { save: vi.fn(), loadAll: vi.fn().mockReturnValue({}), remove: vi.fn(), clear: vi.fn() },
           },
         ],
       });
@@ -83,6 +101,22 @@ describe('CartService', () => {
       service.addToCart('book-1', Price.create(10, 'USD'), 1);
 
       expect(mockRepo.save).toHaveBeenCalledTimes(1);
+    });
+
+    it('should persist snapshot when provided', () => {
+      service.addToCart('book-1', Price.create(10, 'USD'), 1, {
+        title: 'Book 1',
+        imageUrl: 'book.jpg',
+        priceLabel: '10 USD',
+      });
+
+      expect(mockSnapshotRepo.save).toHaveBeenCalledWith({
+        productId: 'book-1',
+        title: 'Book 1',
+        imageUrl: 'book.jpg',
+        priceLabel: '10 USD',
+      });
+      expect(service.itemSnapshots()['book-1']?.title).toBe('Book 1');
     });
   });
 
@@ -127,6 +161,8 @@ describe('CartService', () => {
       service.removeFromCart('book-1');
 
       expect(mockRepo.clear).toHaveBeenCalledTimes(1);
+      expect(mockSnapshotRepo.remove).toHaveBeenCalledWith('book-1');
+      expect(mockSnapshotRepo.clear).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -155,6 +191,27 @@ describe('CartService', () => {
     });
   });
 
+  describe('setCartItemQuantity', () => {
+    it('should set quantity for an existing item and persist', () => {
+      service.addToCart('book-1', Price.create(10, 'USD'), 4);
+
+      service.setCartItemQuantity('book-1', 3);
+      service.setCartItemQuantity('book-1', 2);
+      service.setCartItemQuantity('book-1', 1);
+
+      expect(service.cart()!.items[0].quantity).toBe(1);
+      expect(mockRepo.save).toHaveBeenCalledTimes(4);
+    });
+
+    it('should keep quantity unchanged when trying to set below one', () => {
+      service.addToCart('book-1', Price.create(10, 'USD'), 1);
+
+      service.setCartItemQuantity('book-1', 0);
+
+      expect(service.cart()!.items[0].quantity).toBe(1);
+    });
+  });
+
   describe('clearCart', () => {
     it('should clear the cart and repository', () => {
       service.addToCart('book-1', Price.create(10, 'USD'), 2);
@@ -164,6 +221,7 @@ describe('CartService', () => {
       expect(service.cart()).toBeNull();
       expect(service.itemCount()).toBe(0);
       expect(mockRepo.clear).toHaveBeenCalledTimes(1);
+      expect(mockSnapshotRepo.clear).toHaveBeenCalledTimes(1);
     });
   });
 });

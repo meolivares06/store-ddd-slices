@@ -6,7 +6,7 @@
   border: var(--border-width-thick) var(--border-style) var(--color-fg);
   background: var(--color-bg);
   box-shadow: var(--shadow-hard);
-  font-family: var(--font-family-sans);
+  font-family: var(--font-family-mono);
   position: sticky;
   top: 100px;
 }
@@ -14,9 +14,10 @@
 .summary-title {
   margin: 0;
   font-family: var(--font-family-mono);
-  font-size: 1.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
   text-transform: uppercase;
-  border-bottom: var(--border-width-thick) var(--border-style) var(--color-fg);
+  border-bottom: var(--border-width-thin) var(--border-style) var(--color-fg);
   padding-bottom: var(--spacing-sm);
 }
 
@@ -29,21 +30,26 @@
 .summary-row {
   display: flex;
   justify-content: space-between;
-  font-size: 1rem;
+  font-size: 0.75rem;
+  font-weight: 400;
 }
 
 .summary-total {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-weight: bold;
-  font-size: 1.25rem;
+  font-weight: 700;
+  font-size: 0.75rem;
   border-top: var(--border-width-thick) var(--border-style) var(--color-fg);
   padding-top: var(--spacing-md);
+  text-transform: uppercase;
 }
 
 .total-price {
-  font-family: var(--font-family-mono);
+  font-family: var(--font-family-sans);
+  font-size: 1.5rem;
+  font-weight: 900;
+  line-height: 1.2;
 }
 
 .summary-actions {
@@ -57,7 +63,8 @@
   width: 100%;
   padding: var(--spacing-md);
   font-family: var(--font-family-sans);
-  font-weight: bold;
+  font-weight: 600;
+  font-size: 1.5rem;
   text-transform: uppercase;
   border: var(--border-width-thick) var(--border-style) var(--color-fg);
   cursor: pointer;
@@ -84,9 +91,12 @@
 }
 
 .summary-disclaimer {
-  font-size: 0.75rem;
+  font-family: var(--font-family-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  line-height: 1.2;
   color: var(--color-fg);
   opacity: 0.8;
   margin: 0;
-  text-align: center;
+  text-align: left;
 }

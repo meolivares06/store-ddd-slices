@@ -91,6 +91,32 @@ describe('Cart Aggregate Root', () => {
     });
   });
 
+  describe('setItemQuantity', () => {
+    it('should set quantity for an existing item', () => {
+      const cart = Cart.create(validId, customerId);
+      cart.addItem('book-1', bookPrice, 4);
+
+      cart.setItemQuantity('book-1', 3);
+      cart.setItemQuantity('book-1', 2);
+      cart.setItemQuantity('book-1', 1);
+
+      expect(cart.items[0].quantity).toBe(1);
+    });
+
+    it('should throw when setting quantity below one', () => {
+      const cart = Cart.create(validId, customerId);
+      cart.addItem('book-1', bookPrice, 1);
+
+      expect(() => cart.setItemQuantity('book-1', 0)).toThrow('Quantity must be at least one');
+    });
+
+    it('should throw when item does not exist', () => {
+      const cart = Cart.create(validId, customerId);
+
+      expect(() => cart.setItemQuantity('missing', 1)).toThrow('Item not found in cart');
+    });
+  });
+
   describe('total', () => {
     it('should be zero for an empty cart', () => {
       const cart = Cart.create(validId, customerId);

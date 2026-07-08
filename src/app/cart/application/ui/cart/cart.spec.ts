@@ -7,6 +7,8 @@ import { CartItem } from '../../../domain/cart.model';
 import { provideRouter } from '@angular/router';
 import { By } from '@angular/platform-browser';
 
+type CartSnapshotMap = Record<string, { productId: string; title: string; imageUrl: string; priceLabel?: string }>;
+
 function createMockItem(overrides: Partial<CartItem> = {}): CartItem {
   return {
     productId: '1',
@@ -23,6 +25,8 @@ describe('CartPage', () => {
   let mockRemoveFromCart: ReturnType<typeof vi.fn>;
   let mockClearCart: ReturnType<typeof vi.fn>;
   let mockAddToCart: ReturnType<typeof vi.fn>;
+  let mockSetCartItemQuantity: ReturnType<typeof vi.fn>;
+  let mockSnapshotsSignal: ReturnType<typeof signal<CartSnapshotMap>>;
 
   function setCartItems(items: CartItem[]) {
     mockCartSignal.set(items.length > 0 ? { items } : null);
@@ -34,9 +38,12 @@ describe('CartPage', () => {
     mockRemoveFromCart = vi.fn();
     mockClearCart = vi.fn();
     mockAddToCart = vi.fn();
+    mockSetCartItemQuantity = vi.fn();
+    mockSnapshotsSignal = signal<CartSnapshotMap>({});
 
     const mockCartService = {
       cart: mockCartSignal.asReadonly(),
+      itemSnapshots: mockSnapshotsSignal.asReadonly(),
       itemCount: computed(() => mockCartSignal()?.items.length ?? 0),
       total: computed(() => {
         const items = mockCartSignal()?.items ?? [];
@@ -48,6 +55,7 @@ describe('CartPage', () => {
       removeFromCart: mockRemoveFromCart,
       clearCart: mockClearCart,
       addToCart: mockAddToCart,
+      setCartItemQuantity: mockSetCartItemQuantity,
     } as Partial<CartService> as CartService;
 
     await TestBed.configureTestingModule({
@@ -99,22 +107,71 @@ describe('CartPage', () => {
       expect(mockRemoveFromCart).toHaveBeenCalledWith('1');
     });
 
-    it('should call addToCart with relative quantity difference when quantityChange event is emitted', () => {
+    it('should call setCartItemQuantity when quantityChange event is emitted', () => {
       const cartItemDebug = fixture.debugElement.query(By.css('app-cart-item'));
       
-      // Emit a quantity change from 2 to 4 (diff of +2)
+      // Emit a quantity change from 2 to 4
       cartItemDebug.triggerEventHandler('quantityChange', { productId: '1', quantity: 4 });
       
-      expect(mockAddToCart).toHaveBeenCalledWith('1', item1.unitPrice, 2);
+      expect(mockSetCartItemQuantity).toHaveBeenCalledWith('1', 4);
     });
 
-    it('should call addToCart with negative difference when quantity decreases', () => {
+    it('should call setCartItemQuantity when quantity decreases', () => {
       const cartItemDebug = fixture.debugElement.query(By.css('app-cart-item'));
       
-      // Emit a quantity change from 2 to 1 (diff of -1)
+      // Emit a quantity change from 2 to 1
       cartItemDebug.triggerEventHandler('quantityChange', { productId: '1', quantity: 1 });
       
-      expect(mockAddToCart).toHaveBeenCalledWith('1', item1.unitPrice, -1);
+      expect(mockSetCartItemQuantity).toHaveBeenCalledWith('1', 1);
+    });
+
+    it('should not call setCartItemQuantity when quantity does not change', () => {
+      const cartItemDebug = fixture.debugElement.query(By.css('app-cart-item'));
+
+      cartItemDebug.triggerEventHandler('quantityChange', { productId: '1', quantity: 2 });
+
+      expect(mockSetCartItemQuantity).not.toHaveBeenCalled();
+    });
+
+    it('should map snapshot title and image when available', () => {
+      mockSnapshotsSignal.set({
+        '1': {
+          productId: '1',
+          title: 'Saved Product Name',
+          imageUrl: 'saved-image.jpg',
+          priceLabel: '1000 USD',
+        },
+      });
+      fixture.detectChanges();
+
+      const firstItem = component.items()[0];
+      expect(firstItem.title).toBe('Saved Product Name');
+      expect(firstItem.imageUrl).toBe('saved-image.jpg');
+      expect(firstItem.hasProductChanged).toBe(false);
+    });
+
+    it('should fallback title when snapshot is missing', () => {
+      mockSnapshotsSignal.set({});
+      fixture.detectChanges();
+
+      const firstItem = component.items()[0];
+      expect(firstItem.title).toBe('Product 1');
+      expect(firstItem.imageUrl).toBeNull();
+    });
+
+    it('should mark item as changed when snapshot price label differs from current price', () => {
+      mockSnapshotsSignal.set({
+        '1': {
+          productId: '1',
+          title: 'Saved Product Name',
+          imageUrl: 'saved-image.jpg',
+          priceLabel: '999 USD',
+        },
+      });
+      fixture.detectChanges();
+
+      const firstItem = component.items()[0];
+      expect(firstItem.hasProductChanged).toBe(true);
     });
 
     it('should call clearCart when clear button is clicked', () => {

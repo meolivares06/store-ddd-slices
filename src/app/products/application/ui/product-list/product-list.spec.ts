@@ -41,14 +41,22 @@ describe('ProductList', () => {
       (component as unknown as { handleAddToCart(product: Product): void }).handleAddToCart(product);
 
       expect(mockCartService.addToCart).toHaveBeenCalledOnce();
-      expect(mockCartService.addToCart).toHaveBeenCalledWith('1', Price.create(10, 'USD'), 1);
+      expect(mockCartService.addToCart).toHaveBeenCalledWith('1', Price.create(10, 'USD'), 1, {
+        title: 'Test',
+        imageUrl: 'thumb.jpg',
+        priceLabel: '10 USD',
+      });
     });
 
     it('should call cartService.addToCart for different products', () => {
       const product = Product.create({ id: '2', name: 'Another', price: Price.create(25, 'USD'), thumbnail: 'thumb.jpg', images: ['img.jpg'] });
       (component as unknown as { handleAddToCart(product: Product): void }).handleAddToCart(product);
 
-      expect(mockCartService.addToCart).toHaveBeenCalledWith('2', Price.create(25, 'USD'), 1);
+      expect(mockCartService.addToCart).toHaveBeenCalledWith('2', Price.create(25, 'USD'), 1, {
+        title: 'Another',
+        imageUrl: 'thumb.jpg',
+        priceLabel: '25 USD',
+      });
     });
   });
 });

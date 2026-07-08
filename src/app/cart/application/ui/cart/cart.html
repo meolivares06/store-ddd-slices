@@ -15,8 +15,8 @@
         @for (item of items(); track item.productId) {
           <app-cart-item 
             [item]="item" 
-            (remove)="removeFromCart(\)"
-            (quantityChange)="updateQuantity(\)">
+            (remove)="removeFromCart($event)"
+            (quantityChange)="updateQuantity($event)">
           </app-cart-item>
         }
       </div>
