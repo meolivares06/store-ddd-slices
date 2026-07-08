@@ -1,0 +1,29 @@
+<div class="item-image-wrapper">
+  <div class="item-image-placeholder"></div>
+</div>
+<div class="item-right-side">
+  <div class="item-top-row">
+    <div class="item-title-col">
+      <span class="item-title">Product {{ item().productId.substring(0,4) }}</span>
+      <span class="item-sku">SKU: {{ item().productId }}</span>
+    </div>
+    <span class="item-price">{{ item().unitPrice.formatted }}</span>
+  </div>
+  <div class="item-bottom-row">
+    <div class="item-qty-group">
+      <span class="qty-label">Qty:</span>
+      <app-quantity-stepper 
+        [quantity]="item().quantity" 
+        (quantityChange)="onQuantityChange($event)">
+      </app-quantity-stepper>
+    </div>
+    <button 
+      type="button" 
+      class="remove-btn" 
+      data-testid="remove-btn" 
+      (click)="onRemove()"
+    >
+      REMOVE
+    </button>
+  </div>
+</div>

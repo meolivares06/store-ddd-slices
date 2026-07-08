@@ -1,0 +1,18 @@
+<button 
+  type="button" 
+  class="stepper-btn" 
+  (click)="decrement()" 
+  [disabled]="quantity() <= 1"
+  data-testid="dec-btn"
+>
+  -
+</button>
+<span class="stepper-value" data-testid="qty-value">{{ quantity() }}</span>
+<button 
+  type="button" 
+  class="stepper-btn" 
+  (click)="increment()"
+  data-testid="inc-btn"
+>
+  +
+</button>

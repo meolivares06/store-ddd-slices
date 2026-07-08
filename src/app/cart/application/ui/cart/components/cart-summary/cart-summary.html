@@ -1,0 +1,32 @@
+﻿<h3 class="summary-title">ORDER SUMMARY</h3>
+
+<div class="summary-rows">
+  <div class="summary-row">
+    <span>SUBTOTAL:</span>
+    <span>{{ total().formatted }}</span>
+  </div>
+  <div class="summary-row">
+    <span>SHIPPING:</span>
+    <span>.00</span>
+  </div>
+  <div class="summary-row">
+    <span>TAX (8%):</span>
+    <span>.00</span>
+  </div>
+</div>
+
+<div class="summary-total">
+  <span>Total:</span>
+  <span class="total-price" data-testid="total-price">{{ total().formatted }}</span>
+</div>
+
+<div class="summary-actions">
+  <button 
+    type="button" 
+    class="action-btn checkout-btn" 
+    data-testid="checkout-btn"
+  >
+    CHECKOUT →
+  </button>
+  <p class="summary-disclaimer">Orders are processed within 24-48 technical hours. Shipping latency may vary based on geographic coordinates.</p>
+</div>

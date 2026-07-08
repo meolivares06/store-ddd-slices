@@ -43,11 +43,13 @@ export class Cart {
   }
 
   get total(): Price {
+    if (this._items.length === 0) return Price.create(0, 'USD');
+    const currency = this._items[0].unitPrice.currency;
     return this._items.reduce(
       (acc, item) => acc.add(
         Price.create(item.unitPrice.amount * item.quantity, item.unitPrice.currency),
       ),
-      Price.create(0, 'USD'),
+      Price.create(0, currency),
     );
   }
 

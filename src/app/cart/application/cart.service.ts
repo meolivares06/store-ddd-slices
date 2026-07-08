@@ -10,7 +10,7 @@ export class CartService {
   readonly #cart = signal<Cart | null>(null);
   readonly cart = this.#cart.asReadonly();
 
-  readonly total = computed(() => this.#cart()?.total ?? Price.create(0, 'USD'));
+  readonly total = computed(() => this.#cart()?.total ?? Price.create(0));
   readonly itemCount = computed(() => this.#cart()?.itemCount ?? 0);
 
   constructor() {
@@ -57,6 +57,7 @@ export class CartService {
 
   #loadFromStorage(): void {
     const saved = this.#repository.load();
+    console.log('Loaded cart from storage:', saved);
     if (saved) {
       this.#cart.set(saved);
     }

@@ -1,29 +1,36 @@
-<h2>Shopping Cart</h2>
+﻿<div class="cart-header">
+  <h2 class="cart-title">YOUR CART</h2>
+  <span class="cart-count">[ {{itemCount()}} ITEMS INDEXED ]</span>
+</div>
 
 @if (items().length === 0) {
+  <div class="empty-cart">
     <p>Your cart is empty</p>
-    <a routerLink="/products">Continue Shopping</a>
+    <a routerLink="/products" class="continue-btn">Continue Shopping</a>
+  </div>
 } @else {
-    <div class="cart-items">
+  <div class="cart-layout">
+    <div class="cart-main">
+      <div class="cart-items">
         @for (item of items(); track item.productId) {
-            <div class="cart-item border">
-                <span class="item-id">{{ item.productId }}</span>
-                <span class="item-price">{{ item.unitPrice.formatted }}</span>
-                <span class="item-qty">Qty: {{ item.quantity }}</span>
-                <button
-                    data-testid="remove-btn"
-                    (click)="removeFromCart(item.productId)"
-                >Remove</button>
-            </div>
+          <app-cart-item 
+            [item]="item" 
+            (remove)="removeFromCart(\)"
+            (quantityChange)="updateQuantity(\)">
+          </app-cart-item>
         }
+      </div>
+      
+      <div class="cart-actions-bottom">
+        <a routerLink="/products" class="continue-link">← CONTINUE SHOPPING</a>
+        <button class="clear-cart-btn" (click)="clearCart()">Clear Cart</button>
+      </div>
     </div>
-
-    <div class="cart-total">
-        <strong>Total: {{ total().formatted }}</strong>
-    </div>
-
-    <div class="cart-actions">
-        <button (click)="clearCart()">Clear Cart</button>
-        <a routerLink="/products">Continue Shopping</a>
-    </div>
+    
+    <aside class="cart-sidebar">
+      <app-cart-summary 
+        [total]="total()">
+      </app-cart-summary>
+    </aside>
+  </div>
 }

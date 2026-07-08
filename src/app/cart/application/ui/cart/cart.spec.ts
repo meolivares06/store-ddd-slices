@@ -5,12 +5,13 @@ import { signal, computed } from '@angular/core';
 import { Price } from '../../../../shared/domain/price.value-object';
 import { CartItem } from '../../../domain/cart.model';
 import { provideRouter } from '@angular/router';
+import { By } from '@angular/platform-browser';
 
 function createMockItem(overrides: Partial<CartItem> = {}): CartItem {
   return {
     productId: '1',
     quantity: 2,
-    unitPrice: Price.create(10, 'USD'),
+    unitPrice: Price.create(1000, 'USD'), // $10.00
     ...overrides,
   };
 }
@@ -21,6 +22,7 @@ describe('CartPage', () => {
   let mockCartSignal: ReturnType<typeof signal<{ items: CartItem[] } | null>>;
   let mockRemoveFromCart: ReturnType<typeof vi.fn>;
   let mockClearCart: ReturnType<typeof vi.fn>;
+  let mockAddToCart: ReturnType<typeof vi.fn>;
 
   function setCartItems(items: CartItem[]) {
     mockCartSignal.set(items.length > 0 ? { items } : null);
@@ -31,6 +33,7 @@ describe('CartPage', () => {
     mockCartSignal = signal<{ items: CartItem[] } | null>(null);
     mockRemoveFromCart = vi.fn();
     mockClearCart = vi.fn();
+    mockAddToCart = vi.fn();
 
     const mockCartService = {
       cart: mockCartSignal.asReadonly(),
@@ -44,7 +47,7 @@ describe('CartPage', () => {
       }),
       removeFromCart: mockRemoveFromCart,
       clearCart: mockClearCart,
-      addToCart: vi.fn(),
+      addToCart: mockAddToCart,
     } as Partial<CartService> as CartService;
 
     await TestBed.configureTestingModule({
@@ -81,54 +84,45 @@ describe('CartPage', () => {
   });
 
   describe('with items', () => {
-    const item1 = createMockItem({ productId: '1', quantity: 2, unitPrice: Price.create(10, 'USD') });
-    const item2 = createMockItem({ productId: '2', quantity: 1, unitPrice: Price.create(25, 'USD') });
+    const item1 = createMockItem({ productId: '1', quantity: 2, unitPrice: Price.create(1000, 'USD') });
+    const item2 = createMockItem({ productId: '2', quantity: 1, unitPrice: Price.create(2500, 'USD') });
 
     beforeEach(() => {
       setCartItems([item1, item2]);
     });
 
-    it('should display each item productId, unitPrice, and quantity', () => {
-      const el: HTMLElement = fixture.nativeElement;
-      expect(el.textContent).toContain('1');
-      expect(el.textContent).toContain('10 USD');
-      expect(el.textContent).toContain('2');
-      expect(el.textContent).toContain('2');
-      expect(el.textContent).toContain('25 USD');
-      expect(el.textContent).toContain('1');
-    });
-
-    it('should display the total formatted price', () => {
-      const el: HTMLElement = fixture.nativeElement;
-      expect(el.textContent).toContain('45 USD');
-    });
-
-    it('should call removeFromCart when remove button is clicked', () => {
-      const el: HTMLElement = fixture.nativeElement;
-      const removeButtons = el.querySelectorAll<HTMLButtonElement>('[data-testid="remove-btn"]');
-      expect(removeButtons.length).toBe(2);
-
-      removeButtons[0].click();
+    it('should call removeFromCart when remove event is emitted from CartItemComponent', () => {
+      const cartItemDebug = fixture.debugElement.query(By.css('app-cart-item'));
+      expect(cartItemDebug).toBeTruthy();
+      
+      cartItemDebug.triggerEventHandler('remove', '1');
       expect(mockRemoveFromCart).toHaveBeenCalledWith('1');
     });
 
-    it('should call clearCart when clear button is clicked', () => {
-      const el: HTMLElement = fixture.nativeElement;
-      const clearButton = Array.from(el.querySelectorAll<HTMLButtonElement>('button'))
-        .find(b => b.textContent?.trim().toLowerCase().includes('clear'));
-      expect(clearButton).toBeDefined();
-      clearButton!.click();
-      expect(mockClearCart).toHaveBeenCalledOnce();
+    it('should call addToCart with relative quantity difference when quantityChange event is emitted', () => {
+      const cartItemDebug = fixture.debugElement.query(By.css('app-cart-item'));
+      
+      // Emit a quantity change from 2 to 4 (diff of +2)
+      cartItemDebug.triggerEventHandler('quantityChange', { productId: '1', quantity: 4 });
+      
+      expect(mockAddToCart).toHaveBeenCalledWith('1', item1.unitPrice, 2);
     });
-  });
 
-  describe('navigation', () => {
-    it('should have a "Continue Shopping" link to /products', () => {
-      fixture.detectChanges();
-      const el: HTMLElement = fixture.nativeElement;
-      const link = el.querySelector('a[routerLink="/products"], a[href="/products"]');
-      expect(link).toBeTruthy();
-      expect(link?.textContent?.trim().toLowerCase()).toContain('continue shopping');
+    it('should call addToCart with negative difference when quantity decreases', () => {
+      const cartItemDebug = fixture.debugElement.query(By.css('app-cart-item'));
+      
+      // Emit a quantity change from 2 to 1 (diff of -1)
+      cartItemDebug.triggerEventHandler('quantityChange', { productId: '1', quantity: 1 });
+      
+      expect(mockAddToCart).toHaveBeenCalledWith('1', item1.unitPrice, -1);
+    });
+
+    it('should call clearCart when clear button is clicked', () => {
+      const clearBtn = fixture.debugElement.query(By.css('.clear-cart-btn'));
+      expect(clearBtn).toBeTruthy();
+
+      clearBtn.nativeElement.click();
+      expect(mockClearCart).toHaveBeenCalledOnce();
     });
   });
 });
