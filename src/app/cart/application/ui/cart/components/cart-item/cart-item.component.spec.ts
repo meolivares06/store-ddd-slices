@@ -56,7 +56,7 @@ describe('CartItemComponent', () => {
     expect(el.textContent).toContain('Snapshot title');
   });
 
-  it('should show changed flag when hasProductChanged is true', () => {
+  it('should show updated price badge when hasProductChanged is true', () => {
     fixture.componentRef.setInput('item', {
       ...mockItem,
       hasProductChanged: true,
@@ -64,6 +64,6 @@ describe('CartItemComponent', () => {
     fixture.detectChanges();
 
     const el: HTMLElement = fixture.nativeElement;
-    expect(el.textContent).toContain('Product data changed since added');
+    expect(el.textContent).toContain('PRICE UPDATED SINCE ADDED');
   });
 });

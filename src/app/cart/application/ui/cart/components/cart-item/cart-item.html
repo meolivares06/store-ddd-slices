@@ -17,7 +17,7 @@
       <span class="item-title">{{ item().title }}</span>
       <span class="item-sku">SKU: {{ item().productId }}</span>
       @if (item().hasProductChanged) {
-        <span class="item-change-flag" role="status" aria-live="polite">Product data changed since added</span>
+        <span class="item-change-flag" role="status" aria-live="polite">PRICE UPDATED SINCE ADDED</span>
       }
     </div>
     <span class="item-price">{{ item().unitPrice.formatted }}</span>

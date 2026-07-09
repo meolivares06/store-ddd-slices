@@ -3,11 +3,10 @@ import { ProductStore } from '../../product-store';
 import { ProductComponent } from '../product/product';
 import { CartService } from '../../../../cart/application/cart.service';
 import { Product } from '../../../domain/product.model';
-import { ButtonComponent } from '../../../../../shared/ui/button/button.component';
 
 @Component({
   selector: 'app-product-list',
-  imports: [ProductComponent, ButtonComponent],
+  imports: [ProductComponent],
   templateUrl: './product-list.html',
   styleUrl: './product-list.css',
   host: {

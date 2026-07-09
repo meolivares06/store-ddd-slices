@@ -1,10 +1,17 @@
 <div class="product-list-container">
     <div class="list-header">
-        <app-button 
-            [label]="'Aplicar 10% Descuento'" 
-            [variant]="'secondary'" 
+        <div class="list-meta" aria-label="Catalogue metadata">
+            <span class="list-meta__catalogue">CATALOGUE [{{ productService.products().length }} ITEMS]</span>
+            <span class="list-meta__sort">SORT BY: RELEVANCE →</span>
+        </div>
+
+        <!--
+        <app-button
+            [label]="'Aplicar 10% Descuento'"
+            [variant]="'secondary'"
             (clicked)="applyDiscount()">
         </app-button>
+        -->
     </div>
        
     <div class="list">
