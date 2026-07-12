@@ -3,6 +3,10 @@ import { ProductList } from './products/application/ui/product-list/product-list
 import { CartPage } from './cart/application/ui/cart/cart';
 
 export const routes: Routes = [
+    // default
+    {
+        path: '', redirectTo: 'products', pathMatch: 'full'
+    },
     // product list route
     {
         path: 'products',
