@@ -5,6 +5,7 @@ import { ProductStore } from './product-store';
 import { PRODUCT_REPOSITORY_TOKEN, ProductRepository } from './product-repository.interface';
 import { Product } from '../domain/product.model';
 import { Price } from '../../shared/domain/price.value-object';
+import { ProductSortCriteria } from './product-sort-criteria';
 
 describe('ProductStore', () => {
   let store: ProductStore;
@@ -52,6 +53,17 @@ describe('ProductStore', () => {
       store.loadProducts();
 
       expect(mockRepo.getAll).toHaveBeenCalledTimes(1);
+      expect(mockRepo.getAll).toHaveBeenCalledWith(undefined);
+    });
+
+    it('should forward optional sort criteria to repository', () => {
+      const criteria: ProductSortCriteria = { field: 'PRICE', direction: 'asc' };
+      mockRepo.getAll = vi.fn().mockReturnValue(of([]));
+
+      store.loadProducts(criteria);
+
+      expect(mockRepo.getAll).toHaveBeenCalledOnce();
+      expect(mockRepo.getAll).toHaveBeenCalledWith(criteria);
     });
   });
 

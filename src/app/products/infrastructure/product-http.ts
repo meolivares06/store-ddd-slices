@@ -1,10 +1,11 @@
 import { inject, Service } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { Product } from '../domain/product.model';
 import { Price } from '../../shared/domain/price.value-object';
 import { ProductRepository } from '../application/product-repository.interface';
 import { ApiProduct, ApiProductResponse } from './product-api.dto';
+import { ProductSortCriteria } from '../application/product-sort-criteria';
 
 /**
  * Maps an API product DTO to a domain Product entity.
@@ -26,9 +27,26 @@ export class ProductHttp implements ProductRepository {
 
   readonly baseUrl = 'https://dummyjson.com/products';
 
-  getAll(): Observable<Product[]> {
-    return this.#http.get<ApiProductResponse>(this.baseUrl).pipe(
+  getAll(criteria?: ProductSortCriteria): Observable<Product[]> {
+    return this.#http.get<ApiProductResponse>(this.baseUrl, { params: buildSortParams(criteria) }).pipe(
       map(response => response.products.map(mapToProduct)),
     );
   }
 }
+
+const buildSortParams = (criteria?: ProductSortCriteria): HttpParams => {
+  if (!criteria) {
+    return new HttpParams();
+  }
+
+  if (criteria.field !== 'RELEVANCE' && criteria.field !== 'PRICE') {
+    return new HttpParams();
+  }
+
+  if (criteria.direction !== 'asc' && criteria.direction !== 'desc') {
+    return new HttpParams();
+  }
+
+  const sortBy = criteria.field === 'RELEVANCE' ? 'rating' : 'price';
+  return new HttpParams({ fromObject: { sortBy, order: criteria.direction } });
+};

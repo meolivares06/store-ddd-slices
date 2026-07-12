@@ -2,7 +2,20 @@
     <div class="list-header">
         <div class="list-meta" aria-label="Catalogue metadata">
             <span class="list-meta__catalogue">CATALOGUE [{{ productService.products().length }} ITEMS]</span>
-            <span class="list-meta__sort">SORT BY: RELEVANCE →</span>
+            <div class="list-meta__sort">
+                <label class="list-meta__sort-label" for="product-sort">SORT BY:</label>
+                <select
+                    id="product-sort"
+                    class="list-meta__sort-select"
+                    [value]="selectedSortOptionId()"
+                    (change)="onSortChange($any($event.target).value)"
+                    aria-label="Sort products"
+                >
+                    @for (option of sortOptions; track option.id) {
+                        <option [value]="option.id" [selected]="option.id === selectedSortOptionId()">{{ option.label }}</option>
+                    }
+                </select>
+            </div>
         </div>
 
         <!--

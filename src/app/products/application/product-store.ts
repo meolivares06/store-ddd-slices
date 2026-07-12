@@ -1,6 +1,7 @@
 import { computed, inject, Service, signal } from '@angular/core';
 import { Product } from '../domain/product.model';
 import { PRODUCT_REPOSITORY_TOKEN } from './product-repository.interface';
+import { ProductSortCriteria } from './product-sort-criteria';
 
 export interface ProductView {
   id: string;
@@ -23,8 +24,8 @@ export class ProductStore {
     })),
   );
 
-  loadProducts() {
-    return this.#repository.getAll().subscribe(data => this.#products.set(data));
+  loadProducts(criteria?: ProductSortCriteria) {
+    return this.#repository.getAll(criteria).subscribe(data => this.#products.set(data));
   }
 
   applyDiscountToAll(percentage: number): void {
