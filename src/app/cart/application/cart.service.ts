@@ -6,6 +6,8 @@ import {
 } from './cart-item-snapshot-repository.interface';
 import { Price } from '../../shared/domain/price.value-object';
 import { Cart } from '../domain/cart.model';
+import { EventBusService } from '../../shared/domain/events/event-bus.service';
+import { AddToCartRequestedEvent } from '../../shared/domain/events/add-to-cart-requested.event';
 
 export interface AddToCartSnapshotInput {
   title: string;
@@ -17,6 +19,7 @@ export interface AddToCartSnapshotInput {
 export class CartService {
   readonly #repository = inject(CART_REPOSITORY_TOKEN);
   readonly #snapshotRepository = inject(CART_ITEM_SNAPSHOT_REPOSITORY_TOKEN);
+  readonly #eventBus = inject(EventBusService);
 
   readonly #cart = signal<Cart | null>(null);
   readonly #itemSnapshots = signal<Record<string, CartItemSnapshot>>({});
@@ -28,6 +31,9 @@ export class CartService {
 
   constructor() {
     this.#loadFromStorage();
+    this.#eventBus.on(AddToCartRequestedEvent).subscribe(event => {
+      this.addToCart(event.productId, event.price, event.quantity, event.snapshot);
+    });
   }
 
   addToCart(

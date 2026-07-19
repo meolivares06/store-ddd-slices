@@ -8,11 +8,14 @@ import {
 } from './cart-item-snapshot-repository.interface';
 import { Cart } from '../domain/cart.model';
 import { Price } from '../../shared/domain/price.value-object';
+import { EventBusService } from '../../shared/domain/events/event-bus.service';
+import { AddToCartRequestedEvent } from '../../shared/domain/events/add-to-cart-requested.event';
 
 describe('CartService', () => {
   let service: CartService;
   let mockRepo: CartRepository;
   let mockSnapshotRepo: CartItemSnapshotRepository;
+  let eventBus: EventBusService;
 
   const makeCart = () => Cart.create('cart-1', 'user-1');
 
@@ -32,12 +35,14 @@ describe('CartService', () => {
 
     TestBed.configureTestingModule({
       providers: [
+        EventBusService,
         CartService,
         { provide: CART_REPOSITORY_TOKEN, useValue: mockRepo },
         { provide: CART_ITEM_SNAPSHOT_REPOSITORY_TOKEN, useValue: mockSnapshotRepo },
       ],
     });
 
+    eventBus = TestBed.inject(EventBusService);
     service = TestBed.inject(CartService);
   });
 
@@ -222,6 +227,21 @@ describe('CartService', () => {
       expect(service.itemCount()).toBe(0);
       expect(mockRepo.clear).toHaveBeenCalledTimes(1);
       expect(mockSnapshotRepo.clear).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('Event Integration', () => {
+    it('should listen to AddToCartRequestedEvent and add item to cart', () => {
+      const price = Price.create(15, 'USD');
+      eventBus.emit(new AddToCartRequestedEvent('event-prod-1', price, 1, {
+        title: 'Event Product',
+        imageUrl: 'event.jpg',
+        priceLabel: '15 USD'
+      }));
+
+      expect(service.cart()).not.toBeNull();
+      expect(service.itemCount()).toBe(1);
+      expect(service.cart()?.items[0].productId).toBe('event-prod-1');
     });
   });
 });

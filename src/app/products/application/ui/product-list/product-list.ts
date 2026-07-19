@@ -2,8 +2,9 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductStore } from '../../product-store';
 import { ProductComponent } from '../product/product';
-import { CartService } from '../../../../cart/application/cart.service';
 import { Product } from '../../../domain/product.model';
+import { EventBusService } from '../../../../shared/domain/events/event-bus.service';
+import { AddToCartRequestedEvent } from '../../../../shared/domain/events/add-to-cart-requested.event';
 import {
   normalizeProductSortQuery,
   productSortCriteriaFromOptionId,
@@ -23,7 +24,7 @@ import {
 })
 export class ProductList implements OnInit {
   protected productService = inject(ProductStore);
-  readonly #cartService = inject(CartService);
+  readonly #eventBus = inject(EventBusService);
   readonly #route = inject(ActivatedRoute);
   readonly #router = inject(Router);
 
@@ -49,11 +50,13 @@ export class ProductList implements OnInit {
   }
 
   handleAddToCart(product: Product): void {
-    this.#cartService.addToCart(product.id, product.price, 1, {
-      title: product.name,
-      imageUrl: product.thumbnail,
-      priceLabel: product.price.formatted,
-    });
+    this.#eventBus.emit(
+      new AddToCartRequestedEvent(product.id, product.price, 1, {
+        title: product.name,
+        imageUrl: product.thumbnail,
+        priceLabel: product.price.formatted,
+      })
+    );
   }
 
   protected onSortChange(optionId: string): void {

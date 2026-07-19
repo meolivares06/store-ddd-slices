@@ -2,16 +2,17 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal, WritableSignal } from '@angular/core';
 import { ProductList } from './product-list';
 import { ProductStore } from '../../product-store';
-import { CartService } from '../../../../cart/application/cart.service';
 import { ActivatedRoute, convertToParamMap, ParamMap, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { Product } from '../../../domain/product.model';
 import { Price } from '../../../../shared/domain/price.value-object';
+import { EventBusService } from '../../../../shared/domain/events/event-bus.service';
+import { AddToCartRequestedEvent } from '../../../../shared/domain/events/add-to-cart-requested.event';
 
 describe('ProductList', () => {
   let component: ProductList;
   let fixture: ComponentFixture<ProductList>;
-  let mockCartService: Partial<CartService>;
+  let mockEventBus: Partial<EventBusService>;
   let queryParamMap$: BehaviorSubject<ParamMap>;
   let mockRouter: Pick<Router, 'navigate'>;
   let mockProductStore: {
@@ -21,8 +22,8 @@ describe('ProductList', () => {
   };
 
   beforeEach(async () => {
-    mockCartService = {
-      addToCart: vi.fn(),
+    mockEventBus = {
+      emit: vi.fn(),
     };
 
     queryParamMap$ = new BehaviorSubject(convertToParamMap({}));
@@ -39,7 +40,7 @@ describe('ProductList', () => {
     await TestBed.configureTestingModule({
       imports: [ProductList],
       providers: [
-        { provide: CartService, useValue: mockCartService },
+        { provide: EventBusService, useValue: mockEventBus },
         { provide: ProductStore, useValue: mockProductStore },
         { provide: Router, useValue: mockRouter },
         {
@@ -192,27 +193,41 @@ describe('ProductList', () => {
   });
 
   describe('handleAddToCart', () => {
-    it('should call cartService.addToCart with product id, price, and quantity 1', () => {
+    it('should emit AddToCartRequestedEvent with product id, price, and quantity 1', () => {
       const product = Product.create({ id: '1', name: 'Test', price: Price.create(10, 'USD'), thumbnail: 'thumb.jpg', images: ['img.jpg'] });
       (component as unknown as { handleAddToCart(product: Product): void }).handleAddToCart(product);
 
-      expect(mockCartService.addToCart).toHaveBeenCalledOnce();
-      expect(mockCartService.addToCart).toHaveBeenCalledWith('1', Price.create(10, 'USD'), 1, {
-        title: 'Test',
-        imageUrl: 'thumb.jpg',
-        priceLabel: '10 USD',
-      });
+      expect(mockEventBus.emit).toHaveBeenCalledOnce();
+      expect(mockEventBus.emit).toHaveBeenCalledWith(
+        expect.objectContaining({
+          productId: '1',
+          price: product.price,
+          quantity: 1,
+          snapshot: {
+            title: 'Test',
+            imageUrl: 'thumb.jpg',
+            priceLabel: '10 USD',
+          }
+        })
+      );
     });
 
-    it('should call cartService.addToCart for different products', () => {
+    it('should emit AddToCartRequestedEvent for different products', () => {
       const product = Product.create({ id: '2', name: 'Another', price: Price.create(25, 'USD'), thumbnail: 'thumb.jpg', images: ['img.jpg'] });
       (component as unknown as { handleAddToCart(product: Product): void }).handleAddToCart(product);
 
-      expect(mockCartService.addToCart).toHaveBeenCalledWith('2', Price.create(25, 'USD'), 1, {
-        title: 'Another',
-        imageUrl: 'thumb.jpg',
-        priceLabel: '25 USD',
-      });
+      expect(mockEventBus.emit).toHaveBeenCalledWith(
+        expect.objectContaining({
+          productId: '2',
+          price: product.price,
+          quantity: 1,
+          snapshot: {
+            title: 'Another',
+            imageUrl: 'thumb.jpg',
+            priceLabel: '25 USD',
+          }
+        })
+      );
     });
   });
 });
